@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UNO Jobs — Frontend MVP
 
-## Getting Started
+Cartelera pública de pasantías y empleos trainee/junior en tecnología para la comunidad de estudiantes de la Universidad Nacional del Oeste.
 
-First, run the development server:
+> Proyecto independiente. No está afiliado ni representa oficialmente a la UNO.
+
+## Stack
+
+Next.js 16 (App Router, Cache Components) · React 19 · TypeScript (strict) · Tailwind CSS 4 · shadcn/ui (Radix) · lucide-react · Motion · next-themes
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Estructura
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/
+  app/                     layout, página principal, tokens de diseño (globals.css)
+  config/site.ts           navegación, enlaces externos, rutas de assets
+  components/
+    layout/                SiteHeader, MobileNav, MobileTabBar, ThemeToggle, SiteFooter
+    home/                  HeroSection, AboutSection
+    ui/                    componentes shadcn/ui
+  features/jobs/
+    types.ts               tipo Job (campos opcionales/nullable)
+    constants.ts           etiquetas en español, orden, ventana de "Nuevo"
+    data/mock-jobs.ts      datos de demostración (empresas ficticias)
+    services/              JobRepository + implementación mock, getJobs() cacheado
+    lib/                   parseo de URL, filtrado/orden/facetas, formato
+    hooks/use-job-query.ts estado sincronizado con la URL
+    components/            JobExplorer, JobSearch, CategoryFilters, JobFilters, JobSort, JobCard, JobList, EmptyState…
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Estado en la URL
 
-## Learn More
+Las búsquedas se pueden compartir: `/?q=react&categoria=desarrollo&seniority=junior,trainee&modalidad=remoto&ubicacion=CABA&tecnologia=TypeScript&orden=alfabetico`
 
-To learn more about Next.js, take a look at the following resources:
+## Conectar la API de Laravel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+La UI solo depende de `JobRepository` (`src/features/jobs/services/job-repository.ts`). Implementá `list()` contra la API y reasigná `jobRepository`; hay un esbozo comentado en ese archivo.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Pendientes
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Reemplazar los enlaces de GitHub y Telegram en `src/config/site.ts`.
+- Opcional: `telegramMemberCount` en el mismo archivo para mostrar la cantidad de miembros en el hero.
